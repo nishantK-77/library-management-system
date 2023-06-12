@@ -8,6 +8,8 @@ const BookSchemaObject = {
 
   startDate: { type: String, default: '' },
   endDate: { type: String, default: '' },
+  createdAt: { type: String, default: '' },
+  updatedAt: { type: String, default: '' }
 }
 
 const BookSchema = buildSchema(BookSchemaObject)
