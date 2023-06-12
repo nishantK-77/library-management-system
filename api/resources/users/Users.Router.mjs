@@ -1,5 +1,6 @@
 import { configureRouter } from '@am92/express-utils'
 import UsersController from './Users.Controller.mjs'
+import AuthMiddleware from '../../middlewares/Authentication.mjs'
 
 const {
   create,
@@ -10,6 +11,8 @@ const {
   login
 } = UsersController
 
+const { isAuthenticated, isAdmin } = AuthMiddleware;
+
 const masterConfig = {
   routerName: 'Users',
 
@@ -17,17 +20,12 @@ const masterConfig = {
     search: {
       method: 'post',
       path: '/search',
-      pipeline: [search]
+      pipeline: [isAuthenticated, search]
     },
     create: {
       method: 'post',
       path: '/create',
       pipeline: [create]
-    },
-    replaceAll: {
-      method: 'post',
-      path: '/replace-all',
-      pipeline: [replaceAll]
     },
     updateName: {
       method: 'post',

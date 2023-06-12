@@ -1,5 +1,6 @@
 import { ResponseBody } from '@am92/express-utils'
 import UsersModel from './Users.Model.mjs'
+import jwt from 'jsonwebtoken';
 
 const UsersController = {
   create,
@@ -54,18 +55,23 @@ async function deleteById (request, response, next) {
 
 async function login (request, response, next) {
   const { body = [] } = request;
+  let responseBody;
 
   if(!body.email || !body.password) {
-    const responseBody = new ResponseBody(400, 'Email and password are required', {});
+    responseBody = new ResponseBody(400, 'Email and password are required', {});
     response.body = responseBody
   } else {
 
     const data = await UsersModel.search({ query: { email: body.email } });
-    if(data.documents && data.documents.length > 0 && data.documents[0].password == body.password){
-      const responseBody = new ResponseBody(200, 'User Login Successful', data);
-      response.body = responseBody
+    if (data.documents && data.documents.length > 0 && data.documents[0].password == body.password) {
+      const payload = data.documents[0];
+      delete payload.password;
+      jwt.sign(payload, 'secretkey', function(err, token){
+        responseBody = new ResponseBody(200, 'User Login Successful', { token });
+        response.body = responseBody
+      })
     } else {
-      const responseBody = new ResponseBody(400, 'Bad credentials', {});
+      responseBody = new ResponseBody(400, 'Bad credentials', {});
       response.body = responseBody
     }
   }
