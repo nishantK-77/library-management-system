@@ -27,18 +27,24 @@ async function isAuthenticated (request, response, next) {
       return next(error);
 
     } else {
+      request.user = result;
       process.nextTick(next)
-
     }
   })
 }
 
 async function isAdmin (request, response, next) {
-  const { body } = request
-  const data = await BooksModel.search(body)
-  const responseBody = new ResponseBody(200, 'Books Searched Successfully', data)
-  response.body = responseBody
-  process.nextTick(next)
+  if (!request.user || request.user.type != 1) {
+    const error = { 
+      statusCode: 403,
+      message: 'You are not authorised to perform this action',
+      data: { },
+      error: 'Unauthorised',
+      errorCode: '403'
+    }
+    return next(error);
+  }
+  next();
 }
 
 

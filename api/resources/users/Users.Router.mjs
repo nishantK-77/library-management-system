@@ -20,7 +20,7 @@ const masterConfig = {
     search: {
       method: 'post',
       path: '/search',
-      pipeline: [isAuthenticated, search]
+      pipeline: [isAuthenticated, isAdmin, search]
     },
     create: {
       method: 'post',

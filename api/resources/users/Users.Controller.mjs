@@ -66,7 +66,8 @@ async function login (request, response, next) {
     if (data.documents && data.documents.length > 0 && data.documents[0].password == body.password) {
       const payload = data.documents[0];
       delete payload.password;
-      jwt.sign(payload, 'secretkey', function(err, token){
+      
+      jwt.sign(payload, 'secretkey', { expiresIn: "2h" }, function (err, token) {
         responseBody = new ResponseBody(200, 'User Login Successful', { token });
         response.body = responseBody
       })
