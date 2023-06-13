@@ -1,5 +1,6 @@
 import { configureRouter } from '@am92/express-utils'
 import BooksController from './Books.Controller.mjs'
+import AuthMiddleware from '../../middlewares/Authentication.mjs'
 
 const {
   create,
@@ -9,6 +10,8 @@ const {
   deleteById
 } = BooksController
 
+const { isAuthenticated, isAdmin } = AuthMiddleware;
+
 const masterConfig = {
   routerName: 'Books',
 
@@ -16,27 +19,27 @@ const masterConfig = {
     search: {
       method: 'post',
       path: '/search',
-      pipeline: [search]
+      pipeline: [isAuthenticated, search]
     },
     create: {
       method: 'post',
       path: '/create',
-      pipeline: [create]
+      pipeline: [isAuthenticated, isAdmin, create]
     },
     replaceAll: {
       method: 'post',
       path: '/replace-all',
-      pipeline: [replaceAll]
+      pipeline: [isAuthenticated, isAdmin, replaceAll]
     },
     updateName: {
       method: 'post',
       path: '/update-name',
-      pipeline: [updateName]
+      pipeline: [isAuthenticated, isAdmin, updateName]
     },
     deleteById: {
       method: 'post',
       path: '/delete-by-id',
-      pipeline: [deleteById]
+      pipeline: [isAuthenticated, isAdmin, deleteById]
     }
   }
 }

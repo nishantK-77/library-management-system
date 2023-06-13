@@ -5,7 +5,6 @@ import AuthMiddleware from '../../middlewares/Authentication.mjs'
 const {
   create,
   search,
-  replaceAll,
   updateName,
   deleteById,
   login
@@ -25,17 +24,17 @@ const masterConfig = {
     create: {
       method: 'post',
       path: '/create',
-      pipeline: [create]
+      pipeline: [isAuthenticated, isAdmin, create]
     },
     updateName: {
       method: 'post',
       path: '/update-name',
-      pipeline: [updateName]
+      pipeline: [isAuthenticated, isAdmin, updateName]
     },
     deleteById: {
       method: 'post',
       path: '/delete-by-id',
-      pipeline: [deleteById]
+      pipeline: [isAuthenticated, isAdmin, deleteById]
     },
     login: {
       method: 'post',
