@@ -16,6 +16,7 @@ async function isAuthenticated (request, response, next) {
 
   }
   jwt.verify(token, 'secretkey', function(err, result){
+    console.log("isAuthenticated >>>>>> ", err, result)
     if(err ){
       const error = { 
         statusCode: 401,

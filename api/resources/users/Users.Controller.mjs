@@ -1,6 +1,10 @@
 import { ResponseBody } from '@am92/express-utils'
 import UsersModel from './Users.Model.mjs'
+
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
+const saltRounds = 10
 
 const UsersController = {
   create,
@@ -14,7 +18,9 @@ const UsersController = {
 export default UsersController
 
 async function create (request, response, next) {
-  const { body } = request
+  const { body } = request;
+  body.password = await bcrypt.hash(body.password, saltRounds)
+  
   const data = await UsersModel.create(body)
   const responseBody = new ResponseBody(200, 'User Created Successfully', data)
   response.body = responseBody
@@ -63,18 +69,23 @@ async function login (request, response, next) {
   } else {
 
     const data = await UsersModel.search({ query: { email: body.email } });
-    if (data.documents && data.documents.length > 0 && data.documents[0].password == body.password) {
+    if (data.documents && data.documents.length > 0 && await validatePassword(body.password, data.documents[0].password)) {
       const payload = data.documents[0];
       delete payload.password;
       
-      jwt.sign(payload, 'secretkey', { expiresIn: "2h" }, function (err, token) {
-        responseBody = new ResponseBody(200, 'User Login Successful', { token });
-        response.body = responseBody
-      })
+      const token = jwt.sign(payload, 'secretkey', { expiresIn: "2h" });
+      
+      responseBody = new ResponseBody(200, 'User Login Successful', { token });
+      response.body = responseBody
     } else {
       responseBody = new ResponseBody(400, 'Bad credentials', {});
       response.body = responseBody
     }
   }
   process.nextTick(next)
+}
+
+async function validatePassword(password, hash) {
+  const result = await bcrypt.compare(password, hash)
+  return result;
 }
