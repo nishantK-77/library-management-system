@@ -1,8 +1,6 @@
 import ExpressUtils from '@am92/express-utils'
 import { mongoConnect } from '@am92/mongo-odm'
 
-// import nodeHttp from './api/helpers/nodeHttp.mjs'
-
 import SERVER_CONFIG, { SERVICE } from './config/SERVER_CONFIG.mjs'
 
 const { PORT } = SERVER_CONFIG

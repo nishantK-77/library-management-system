@@ -4,7 +4,6 @@ import UsersModel from './Users.Model.mjs'
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-const saltRounds = 10
 
 const UsersController = {
   create,
@@ -19,11 +18,10 @@ export default UsersController
 
 async function create (request, response, next) {
   const { body } = request;
-  body.password = await bcrypt.hash(body.password, saltRounds)
   
-  const data = await UsersModel.create(body)
-  const responseBody = new ResponseBody(200, 'User Created Successfully', data)
-  response.body = responseBody
+  const data = await UsersModel.create(body);
+  const responseBody = new ResponseBody(200, 'User Created Successfully', data);
+  response.body = responseBody;
   process.nextTick(next)
 }
 
@@ -74,7 +72,7 @@ async function login (request, response, next) {
       delete payload.password;
       
       const token = jwt.sign(payload, 'secretkey', { expiresIn: "2h" });
-      
+
       responseBody = new ResponseBody(200, 'User Login Successful', { token });
       response.body = responseBody
     } else {

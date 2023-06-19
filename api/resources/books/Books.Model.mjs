@@ -1,9 +1,7 @@
 import _ from 'lodash'
 import moment from 'moment'
-// import gokuSdk from '@amc/goku-sdk'
 import { Model } from '@am92/mongo-odm'
 import BooksSchema from './Books.Schema.mjs'
-// import Sftp from '../../helpers/Sftp.mjs'
 
 const BooksODM = new Model('Books', BooksSchema)
 const { replaceAll } = BooksODM
@@ -12,11 +10,6 @@ const BooksModel = {
   create,
   search,
   replaceAll,
-  // updateSchemeMaster,
-//   updateNav,
-//   updateCagr,
-//   updateGroup,
-//   updateTheme,
   updateName,
   deleteById
 }

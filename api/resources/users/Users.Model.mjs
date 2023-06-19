@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import moment from 'moment'
-// import gokuSdk from '@amc/goku-sdk'
 import { Model } from '@am92/mongo-odm'
 import UserSchema from './Users.Schema.mjs'
-// import Sftp from '../../helpers/Sftp.mjs'
+import bcrypt from 'bcrypt';
+
+const saltRounds = 10
 
 const UsersODM = new Model('Users', UserSchema)
 const { replaceAll } = UsersODM
@@ -47,6 +48,7 @@ async function search (attrs = {}) {
 }
 
 async function create (attrs = {}) {
+  attrs.password = await bcrypt.hash(attrs.password, saltRounds);
   const response = await UsersODM.createOne(attrs);
   return response;
 }
