@@ -6,8 +6,8 @@ import path, { dirname } from 'path'
 if (!process.env.npm_package_name) {
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = dirname(__filename)
-  const packageJSOnPath = path.resolve(__dirname, '../../package.json')
-  const packageJson = JSON.parse(fs.readFileSync(packageJSOnPath))
+  const packageJSONPath = path.resolve(__dirname, '../../package.json')
+  const packageJson = JSON.parse(fs.readFileSync(packageJSONPath))
 
   const { name, version } = packageJson
   const service = `${name}@${version}`
